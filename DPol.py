@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-#---------------------------------------------------------
-#---------------------------------------------------------
 # PURPOSE:
 # Code to simulate dust polarization maps at 353 GHz (Vansyngel et al. 2016)
 # EXAMPLE:
@@ -9,10 +7,6 @@
 # 01-06-2017 ; last updated the code
 # 28-04-2017 ; modified it to make it compatible with github
 # 25-04-2017 ; copied from flavien_test_model_v2.py
-#---------------------------------------------------------
-#---------------------------------------------------------
-
-# introduce unit conversion factor
 
 
 import sys
