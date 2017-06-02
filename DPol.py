@@ -116,6 +116,9 @@ for relz in range(out.nsim):
     print "Relz:", relz+1
 
     dmap=np.zeros((3,npix))
+    I_tmp = np.zeros(npix)
+    Q_tmp = np.zeros(npix)
+    U_tmp = np.zeros(npix)
 
     for i in np.arange(out.nlay):
 
@@ -155,8 +158,8 @@ for relz in range(out.nsim):
         U_tmp =   U_tmp -  (cos2gamma * np.sin(2.*psi))
 
         dmap[0] = inmap
-        dmap[1] = Q_map/I_map * inmap
-        dmap[2] = U_map/I_map * inmap
+        dmap[1] = Q_tmp/I_tmp * inmap
+        dmap[2] = U_tmp/I_tmp * inmap
 
       
 #Smooth final maps with Gaussian fwhm smoothing
@@ -167,7 +170,7 @@ for relz in range(out.nsim):
     nalms=(alms[0]*out.t, alms[1]*out.p0 + hp.almxfl(alms[0], wl*out.rho*out.p0), hp.almxfl(alms[2], (1. - (1. - out.f)*wl) * out.p0))
     
     map=hp.alm2map(nalms, out.nside, lmax=nlmax, pol=True, pixwin=True)    
-    hp.write_map(out.output_dir + '%s_TQU_353GHz_relz%d.fits' % (out.output_prefix,relz+1), map*gmask,  coord='G', column_names=('TEMPERATURE','Q_POLARISATION','U_POLARISATION'),extra_header=extra_header)
+    hp.write_map(out.output_dir + '%s_TQU_353GHz_relz%s.fits' % (out.output_prefix,str(relz+1).zfill(3)), map*gmask,  coord='G', column_names=('TEMPERATURE','Q_POLARISATION','U_POLARISATION'),extra_header=extra_header)
 
 
 
