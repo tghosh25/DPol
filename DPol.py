@@ -115,7 +115,6 @@ for relz in range(out.nsim):
 
     print "Relz:", relz+1
 
-    dmap=np.zeros((3,npix))
     I_tmp = np.zeros(npix)
     Q_tmp = np.zeros(npix)
     U_tmp = np.zeros(npix)
@@ -157,9 +156,10 @@ for relz in range(out.nsim):
         Q_tmp =   Q_tmp +  (cos2gamma * np.cos(2.*psi))
         U_tmp =   U_tmp -  (cos2gamma * np.sin(2.*psi))
 
-        dmap[0] = inmap
-        dmap[1] = Q_tmp/I_tmp * inmap
-        dmap[2] = U_tmp/I_tmp * inmap
+    dmap=np.zeros((3,npix))
+    dmap[0] = inmap
+    dmap[1] = Q_tmp/I_tmp * inmap
+    dmap[2] = U_tmp/I_tmp * inmap
 
       
 #Smooth final maps with Gaussian fwhm smoothing
