@@ -25,8 +25,10 @@ class output(object):
         self.output_dir    = str(config_dict['output_dir'])
         self.input_dir     = str(config_dict['input_dir'])
         self.fwhm          = float(config_dict['fwhm']) 
+        self.b0_model      = int(config_dict['b0_model']) 
         self.lonb0         = float(config_dict['lonb0']) 
         self.latb0         = float(config_dict['latb0']) 
+        self.b0_filename   = str(config_dict['b0_filename']) 
         self.nlay          = float(config_dict['nlay']) 
         self.fm            = float(config_dict['fm']) 
         self.p0            = float(config_dict['p0']) 
@@ -76,10 +78,20 @@ if(out.nside != np.size(gmask)):
 
 # simulating large-scale uniform magnetic field
 
-B0vec=np.zeros((3,npix))  
-B0vec[0] = np.cos(np.radians(out.lonb0))*np.cos(np.radians(out.latb0))
-B0vec[1] = np.sin(np.radians(out.lonb0))*np.cos(np.radians(out.latb0))
-B0vec[2] = np.sin(np.radians(out.latb0))
+if(out.b0_model == 1):
+    B0vec=np.zeros((3,npix))  
+    B0vec[0] = np.cos(np.radians(out.lonb0))*np.cos(np.radians(out.latb0))
+    B0vec[1] = np.sin(np.radians(out.lonb0))*np.cos(np.radians(out.latb0))
+    B0vec[2] = np.sin(np.radians(out.latb0))
+else:
+    B0_tmp = hp.read_map(out.input_dir+out.b0_filename)
+    if(out.nside == np.size(B0_tmp)):
+        B0vec = B0_tmp
+    else:
+        B0vec  = hp.ud_grade(B0_tmp, nside_out=out.nside, order_in='RING')
+
+
+
 
 north_vec =   [-np.cos(phi)*np.cos(theta),-np.sin(phi)*np.cos(theta),np.sin(theta)]
 east_vec  = - np.transpose(np.cross(np.transpose(los_vec), np.transpose(north_vec)))
@@ -139,7 +151,7 @@ for relz in range(out.nsim):
         cos2gamma = np.sum(Bvec_perp**2, axis=0)
             
         buf = (Bvec_perp[0]*north_vec[0]+Bvec_perp[1]*north_vec[1]+Bvec_perp[2]*north_vec[2])/np.sqrt(cos2gamma)
-        B_angle = np.arccos(buf)        
+        B_angle = np.arccos(np.clip(buf, -1, 1))        
         buf2 =  Bvec_perp[0]*east_vec[0]+Bvec_perp[1]*east_vec[1]+Bvec_perp[2]*east_vec[2]
         neg_angle=np.where(buf2 < 0.)                              
         B_angle[neg_angle] = - B_angle[neg_angle]          
@@ -155,6 +167,7 @@ for relz in range(out.nsim):
         I_tmp =   I_tmp +  (1. - out.p0*(cos2gamma - 2./3.))
         Q_tmp =   Q_tmp +  (cos2gamma * np.cos(2.*psi))
         U_tmp =   U_tmp -  (cos2gamma * np.sin(2.*psi))
+
 
     dmap=np.zeros((3,npix))
     dmap[0] = inmap
