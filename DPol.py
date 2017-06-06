@@ -84,7 +84,7 @@ if(out.b0_model == 1):
     B0vec[1] = np.sin(np.radians(out.lonb0))*np.cos(np.radians(out.latb0))
     B0vec[2] = np.sin(np.radians(out.latb0))
 else:
-    B0_tmp = hp.read_map(out.input_dir+out.b0_filename)
+    B0_tmp = hp.read_map(out.input_dir+out.b0_filename, field=(0,1,2))
     if(out.nside == np.size(B0_tmp)):
         B0vec = B0_tmp
     else:
