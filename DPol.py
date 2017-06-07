@@ -66,13 +66,13 @@ theta, phi = hp.pix2ang(out.nside,lpix)
 
 tmp         = hp.read_map(out.input_dir+'COM_CompMap_Dust-GNILC-F353_2048_R2.00.fits',field=0)
 tmp         = (tmp - 0.13)/2.83e-4
-if(out.nside == np.size(tmp)):
+if(npix == np.size(tmp)):
     inmap = tmp
 else:
     inmap  = hp.ud_grade(tmp, nside_out=out.nside, order_in='RING')
 
 gmask         = hp.read_map(out.input_dir+'GalMaskApo2Fsky81_ns256.fits',field=0)
-if(out.nside != np.size(gmask)):
+if(npix != np.size(gmask)):
     gmask  = hp.ud_grade(gmask, nside_out=out.nside, order_in='RING')
 
 
@@ -85,11 +85,10 @@ if(out.b0_model == 1):
     B0vec[2] = np.sin(np.radians(out.latb0))
 else:
     B0_tmp = hp.read_map(out.input_dir+out.b0_filename, field=(0,1,2))
-    if(out.nside == np.size(B0_tmp)):
+    if(npix == np.size(B0_tmp[0])):
         B0vec = B0_tmp
     else:
         B0vec  = hp.ud_grade(B0_tmp, nside_out=out.nside, order_in='RING')
-
 
 
 
