@@ -246,7 +246,7 @@ m4 = mpfit.mpfit(myfunct, p0, functkw=fa4, quiet=1 )
 print "Fitted TE parameters of Stage A maps: ", m4.params, m4.perror
 
 
-modelBB=ufloat(m1.params[0], m1.perror[0])
+modelBB=ufloat(m2.params[0], m2.perror[0])
 dataBB=ufloat(out.ampbb, out.err_ampbb)
 
 NB =  dataBB/modelBB
